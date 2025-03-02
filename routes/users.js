@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 // This section will help you get a single record by id
-router.get("/:name", authenticateToken, async (req, res) => {
+router.get("/:name", async (req, res) => {
   let collection = await db.collection("users");
   let query = { name: req.params.name };
   let result = await collection.findOne(query);
@@ -43,18 +43,18 @@ router.post("/register", async (req, res) => {
     let collection = await db.collection("users");
     let query = { name: req.body.name };
     let result = await collection.findOne(query);
-    if (req.headers.secret_key === process.env.SECRET_KEY) {
+    //if (req.headers.secret_key === process.env.SECRET_KEY) {
       if (!result) {
         let r = await collection.insertOne(newDocument);
         res.send(r).status(204);
       } else {
         res.send("User exists").status(403);
       }
-    }
+   // }
     //console.log(result)
-    else {
+   /* else {
       res.json("Unauthorised");
-    }
+    }*/
   } catch (err) {
     console.error(err);
     //res.send("Error adding record");
@@ -67,7 +67,7 @@ router.post("/login", async (req, res) => {
   let collection = await db.collection("users");
   //console.log((req.headers.secret_key))
   const user = await collection.findOne(query);
-  if (req.headers.secret_key === process.env.SECRET_KEY) {
+  //if (req.headers.secret_key === process.env.SECRET_KEY) {
     if (!user || user.password !== password) {
       return res.status(401).json({ message: "Invalid credentials" });
     } else {
@@ -77,15 +77,15 @@ router.post("/login", async (req, res) => {
 
       res.json({ token });
     }
-  }
+  /*}
 
  else{
   res.send("Unauthorised");
- }
+ }*/
 });
 
 // This section will help you update a record by id.
-router.put("/cart/:name", authenticateToken, async (req, res) => {
+router.put("/cart/:name", async (req, res) => {
   try {
     let query = { name: req.params.name };
     const updates = {
@@ -103,7 +103,7 @@ router.put("/cart/:name", authenticateToken, async (req, res) => {
   }
 });
 
-router.put("/hobby/:name", authenticateToken, async (req, res) => {
+router.put("/hobby/:name", async (req, res) => {
   try {
     let query = { name: req.params.name };
     const updates = {
